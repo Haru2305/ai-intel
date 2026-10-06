@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "last_run_at": null,
+  "last_success_at": null,
+  "bootstrap_window": "approximately previous 24 hours",
+  "note": "First run should bootstrap once, then use last_run_at with a small overlap."
+}
