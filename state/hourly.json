@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "last_run_at": "2026-10-07T00:25:00+09:00",
+  "last_success_at": "2026-10-07T00:25:00+09:00",
+  "bootstrap_window": "approximately previous 48 hours",
+  "last_accepted_ids": [
+    "2026-10-07-mistral-large-4",
+    "2026-10-07-diffusers-0.41.0",
+    "2026-10-07-claude-agent-sdk-0.3.290",
+    "2026-10-07-meta-microsoft-claude-reduction"
+  ],
+  "note": "Initial seed run. Future runs should use last_run_at with a small overlap and deduplicate."
+}
