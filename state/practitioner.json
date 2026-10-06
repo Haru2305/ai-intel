@@ -1,11 +1,8 @@
 {
   "version": 1,
-  "last_run_at": "2026-10-07T03:31:54+09:00",
-  "last_success_at": "2026-10-07T03:31:54+09:00",
+  "last_run_at": "2026-10-07T07:39:13+09:00",
+  "last_success_at": "2026-10-07T07:39:13+09:00",
   "bootstrap_window": "approximately previous 24 hours",
-  "last_queued_ids": [
-    "2026-10-07-agent-sh-consult",
-    "2026-10-07-codex-auto-review-free"
-  ],
-  "note": "Bootstrap completed. Future runs should use last_run_at with a small overlap and deduplicate."
+  "last_queued_ids": [],
+  "note": "Successful zero-result run. Searches since the previous checkpoint found no sufficiently new, practical, non-duplicate practitioner signal to queue. Future runs should use last_run_at with a small overlap and deduplicate."
 }
