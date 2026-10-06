@@ -8,6 +8,7 @@
     "id": {"type":"string"},
     "collected_at": {"type":"string","format":"date-time"},
     "published_at": {"type":["string","null"],"format":"date-time"},
+    "lane": {"enum":["frontier","practitioner","legacy"]},
     "source": {"type":"string"},
     "author": {"type":["string","null"]},
     "url": {"type":"string","format":"uri"},
@@ -27,11 +28,25 @@
     "novelty": {"type":"integer","minimum":0,"maximum":10},
     "reliability": {"type":"integer","minimum":0,"maximum":10},
     "actionability": {"type":"integer","minimum":0,"maximum":10},
+    "personal_value": {"type":["integer","null"],"minimum":0,"maximum":10},
     "confidence": {"enum":["high","medium","low"]},
-    "status": {"enum":["accepted","rejected","needs_verification"]},
+    "status": {"enum":["queued","accepted","rejected","needs_verification"]},
+    "verification_status": {"enum":["unverified","partially_verified","verified","misleading","false"]},
     "duplicate_of": {"type":["string","null"]},
     "reason": {"type":["string","null"]},
-    "tags": {"type":"array","items":{"type":"string"},"uniqueItems":true}
+    "tags": {"type":"array","items":{"type":"string"},"uniqueItems":true},
+    "jev": {
+      "type":["object","null"],
+      "properties":{
+        "used":{"type":"boolean"},
+        "model":{"type":["string","null"]},
+        "relevance":{"type":["number","null"]},
+        "personal_value":{"type":["number","null"]},
+        "verification_priority":{"type":["number","null"]},
+        "confidence":{"type":["number","null"]}
+      },
+      "additionalProperties":false
+    }
   },
   "additionalProperties": false
 }
