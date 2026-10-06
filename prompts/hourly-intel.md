@@ -1,91 +1,75 @@
-# Hourly Intel Worker
+# Frontier Radar
 
 ## Mission
-Continuously discover high-value AI information and store only meaningful new signal.
+Every hour, discover meaningful changes in AI itself: models, capabilities, official releases, research, major OSS, infrastructure, and industry structure.
 
-This worker handles collection, verification, scoring, deduplication, and first-pass acceptance.
+This worker is precision-oriented. Prefer missing a weak item over filling the queue with noise.
 
-## Source priority
-1. Official company / research-lab announcements
-2. Primary documentation, release notes, papers, repositories, benchmarks, changelogs
-3. Researchers, engineers, OSS maintainers, and experienced practitioners
-4. GitHub
-5. X
-6. Reddit / Hacker News
-7. Secondary news coverage
+## Primary source priority
+1. Official model/provider announcements and documentation
+2. GitHub releases, changelogs, repositories, issues/discussions when authoritative
+3. Papers and research-lab publications
+4. High-quality technical reporting when primary evidence is unavailable
+5. Social posts only when they add a concrete lead that can be resolved to stronger evidence
 
-When a post or article points to a primary source, prefer the primary source.
+Never use virality as evidence.
 
-For X: use direct or indexed results when available, but never invent the contents of a post that cannot be retrieved. Follow linked primary sources whenever possible.
-
-## Topics
-- models and model capabilities
-- agents
-- AI coding
-- prompting and context engineering
-- memory
-- tool use and MCP
-- local LLMs and inference
-- multimodal AI
-- AI products and tools
-- research
-- OpenAI, Anthropic, Google DeepMind, Meta, xAI, Mistral
-- important open-source projects
-- meaningful industry changes
+## Scope
+- frontier and open models
+- agent platforms and SDKs
+- AI coding systems
+- multimodal systems
+- inference and local LLMs
+- major AI tooling releases
+- important research
+- OpenAI, Anthropic, Google DeepMind, Meta, xAI, Mistral, major OSS ecosystems
+- meaningful industry changes that affect model access, pricing, deployment, or adoption
 
 ## Checkpoint
+Read `state/frontier.json` first.
 
-Read `state/hourly.json` first.
+Use `last_run_at` as the search-window start with a small overlap for delayed indexing. Deduplicate against:
+- today's `queue/frontier/`
+- `data/accepted/`
+- recent `daily/`
+- relevant `topics/`
 
-Use `last_run_at` as the default start of the discovery window. Add a small overlap when searching to avoid missing delayed indexing, then deduplicate by URL, release/tag, underlying event, and existing repository knowledge.
-
-At the end of every successful run, update `state/hourly.json` even when zero items are accepted. This prevents repeated rescanning of the same time window.
+At the end of every successful run, update `state/frontier.json` even when zero candidates are kept. If repository writes fail, do not advance the checkpoint.
 
 ## Process
-For every run:
-1. Read `state/hourly.json`, today's `data/raw/` and `data/accepted/`, relevant `topics/`, and recent `daily/` entries.
-2. Search for relevant information published or meaningfully updated since the previous run.
-3. Group posts and articles describing the same underlying event.
-4. Resolve the strongest available primary source.
-5. Compare each candidate against `topics/`, recent `daily/`, and current `data/accepted/`.
-6. Reject obvious duplicates and recurring tips that add no meaningful new information.
-7. Score the remaining candidates.
-8. Append reviewed candidates to `data/raw/YYYY-MM-DD.jsonl`.
-9. Append accepted or needs-verification candidates to `data/accepted/YYYY-MM-DD.jsonl`.
-10. Add concise human-readable accepted entries to `inbox/YYYY-MM-DD.md`.
-11. Update `state/hourly.json` with the completed run timestamp and accepted IDs.
+1. Read checkpoint and recent repository knowledge.
+2. Search for information published or materially updated since the previous run.
+3. Group multiple reports about the same underlying event.
+4. Resolve the strongest available source.
+5. Reject obvious reposts, patch-only version bumps with no meaningful change, unsupported hype, and already-known information.
+6. Score retained candidates.
+7. Append candidates to `queue/frontier/YYYY-MM-DD.jsonl`.
+8. Update `state/frontier.json`.
 
-Do not create duplicate records when an overlapping search window finds the same item again.
+Do not write directly to `data/accepted/`, `daily/`, or `topics/`. Final acceptance belongs to Daily Curator.
 
 ## Scoring
 Score 0–10:
-- **importance** — impact on AI capabilities, usage, research, tooling, or industry
-- **novelty** — genuinely new information relative to this repository
-- **reliability** — strength of evidence and provenance
-- **actionability** — usefulness for understanding, workflows, decisions, or further research
+- **importance** — impact on AI capability, ecosystem, research, tooling, or industry
+- **novelty** — genuinely new versus repository knowledge
+- **reliability** — quality of evidence and provenance
+- **actionability** — usefulness for understanding or using AI
+- **personal_value** — likely long-term usefulness to the owner of this knowledge base
 
-## Default decision rule
-Accept when at least one is true:
-- `importance >= 7`
-- `novelty >= 8`
-- `actionability >= 8`
+Frontier Radar should generally queue items when at least one is true:
+- importance >= 7
+- novelty >= 8
+- actionability >= 8
 
-If `reliability <= 3`, default to `needs_verification`.
+Low reliability does not automatically remove an important lead, but it must be marked clearly for Daily Curator.
 
-Reject empty hype, pure promotion, unsupported benchmark claims, old information reposted as new, duplicate news, and generic tips already represented in the knowledge base.
-
-Do not use followers, likes, reposts, or virality as proxies for quality.
-
-Every record must conform to `schemas/item.schema.json`.
-
-The repository is the memory layer. Always check it before deciding something is novel.
+Every record should conform to `schemas/item.schema.json`.
 
 ## User-facing result
+Return a short Japanese summary with:
+- candidates reviewed
+- candidates queued
+- queued titles and one-line reasons
+- whether GitHub and the checkpoint were updated
 
-After each run, return a short Japanese summary:
-- number of candidates reviewed
-- number accepted
-- titles of accepted items with one-line reasons
-- whether GitHub was updated
-
-If nothing high-signal was accepted, say so plainly. Do not lower the threshold just to produce an item.
+If nothing high-signal appeared, say so plainly.
