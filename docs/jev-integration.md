@@ -1,42 +1,15 @@
 # Optional Jev integration
 
-Jev is optional. The pipeline must continue to work when Jev is unavailable.
-
-## Best role
-
-Use Jev as a cheap, fast decision layer before expensive LLM verification.
-
-Good bounded decisions:
-- Is this candidate relevant to the knowledge base?
-- Is this probably a duplicate?
-- Which topic should receive it?
-- How high is personal value?
-- How urgently should this claim be verified?
-
-## Do not use Jev for
-- factual verification by itself
-- open-ended research
-- prose summaries
-- replacing primary-source checks
-- final acceptance when confidence is low
-
-## Escalation
-
-A practical pattern:
+Jev is optional and must never be a hard dependency.
 
 ```text
-candidate
-   |
-   v
-Jev: relevance / route / priority / personal-value estimate
-   |
-   +-- low confidence --> LLM review
-   |
-   +-- high confidence, low relevance --> discard or low-priority queue
-   |
-   +-- high confidence, high relevance --> LLM verification
+discovery -> candidate -> Jev bounded pre-decision -> LLM verification/curation -> canonical intel
 ```
 
-Store optional decision metadata under the `jev` field in `schemas/item.schema.json`.
+Use Jev for relevance, probable duplicate, topic route, personal-value bucket and verification priority.
 
-Never commit API keys or credentials to this repository. Use environment secrets in the runtime that eventually calls the API.
+Do not use Jev for factual verification, open-ended research, prose generation, replacing primary-source checks or final acceptance.
+
+Low-confidence decisions escalate to the LLM. A low Jev score must not suppress a clearly important primary-source development solely because the classifier is uncertain.
+
+Store optional metadata under the `jev` field. Never commit API keys or credentials.

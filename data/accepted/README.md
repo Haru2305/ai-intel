@@ -1,5 +1,5 @@
-# Accepted data
+# Accepted intel
 
-JSONL records for candidates marked `accepted` or `needs_verification`.
+Canonical curated claim/event records, one JSONL file per day.
 
-One file per day: `YYYY-MM-DD.jsonl`.
+New records must conform to `schemas/intel.schema.json`. Aggregate multiple useful sources under the record's `evidence` array.

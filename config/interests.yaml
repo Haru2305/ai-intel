@@ -1,0 +1,43 @@
+score_weights:
+  personal_value: 0.35
+  actionability: 0.25
+  novelty: 0.20
+  importance: 0.10
+  reliability: 0.10
+
+reliability_gate:
+  blocked_max: 3
+  caveated_max: 6
+  normal_min: 7
+
+high_priority:
+  - ai agents
+  - coding agents
+  - Claude Code
+  - Codex
+  - Gemini coding workflows
+  - automation
+  - context engineering
+  - agent orchestration
+  - useful AI workflows
+  - local LLMs
+  - practical AI tools
+
+medium_priority:
+  - frontier models
+  - multimodal models
+  - inference
+  - open-weight models
+  - AI research
+  - developer platforms
+
+low_priority:
+  - generic funding news
+  - generic executive commentary
+  - enterprise procurement without technical implications
+  - engagement-bait prompt lists
+
+principles:
+  - Prefer durable usefulness over broad popularity.
+  - A small workflow improvement may outrank a major industry story.
+  - Do not lower reliability standards because personal value is high.

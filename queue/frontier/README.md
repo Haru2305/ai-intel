@@ -1,3 +1,5 @@
 # Frontier queue
 
-Hourly candidates from Frontier Radar. One JSONL file per day. Daily Curator owns final acceptance.
+Frontier Radar candidates. New records must conform to `schemas/candidate.schema.json`.
+
+These are leads, not durable truth. Final acceptance belongs to Daily Curator.
