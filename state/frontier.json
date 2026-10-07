@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "last_run_at": "2026-10-07T16:45:31+09:00",
-  "last_success_at": "2026-10-07T16:45:31+09:00",
+  "last_run_at": "2026-10-07T20:46:41+09:00",
+  "last_success_at": "2026-10-07T20:46:41+09:00",
   "migrated_from": "state/hourly.json",
   "note": "Use a small search overlap and deduplicate before queueing."
 }
