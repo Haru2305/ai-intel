@@ -1,143 +1,91 @@
 # ai-intel
 
-Personal AI intelligence knowledge base.
+Personal AI intelligence system. The goal is not to archive every AI news item; it is to discover weak signals quickly, verify them carefully, and preserve only useful knowledge.
 
-The goal is not to archive every AI news item. The system separates fast discovery from slower judgment so that useful weak signals can be captured without letting noise pollute the long-term knowledge base.
-
-## Architecture
+## V1 architecture
 
 ```text
-                    HOURLY DISCOVERY
-
-   Official / GitHub / Research           X / Reddit / HN / Blogs
-              |                                      |
-              v                                      v
-      Frontier Radar                         Practitioner Radar
-      precision-oriented                     recall-oriented
-              |                                      |
-              v                                      v
-    queue/frontier/                         queue/practitioner/
-              \                                      /
-               \                                    /
-                +-------------+----------------------+
-                              |
-                              v
-                    Daily Curator / Verifier
-                 dedupe / verify / personal value
-                              |
-                    +---------+---------+
-                    |         |         |
-                    v         v         v
-              data/accepted  daily/   topics/
-                              |
-                              v
-                       Weekly Analyst
+Official / GitHub / Research       X / Reddit / HN / Blogs
+            |                                |
+     Frontier Radar                  Practitioner Radar
+     precision-oriented              recall-oriented
+            \                                /
+             +------ optional Jev -----------+
+                        |
+                 candidate queue
+                        |
+               Daily Curator / Verifier
+              merge / verify / judge
+                        |
+          +-------------+-------------+
+          |             |             |
+ data/accepted/       daily/        topics/
+ canonical intel     briefing     durable knowledge
+          |
+     Weekly Analyst
 ```
 
-## Why two hourly radars?
+## Core rules
 
-### Frontier Radar
-Asks: **What changed in AI itself?**
+1. Workers discover; Daily Curator judges.
+2. Durable knowledge is a **claim/event**, not a post or URL.
+3. One intel record may contain multiple evidence sources.
+4. Reliability is a gate, not merely another weighted score.
+5. Personal usefulness can outrank generic news importance.
+6. GitHub is durable memory/config/audit history, not the execution engine.
+7. Models and workers remain replaceable.
 
-Focus:
-- official releases
-- model/provider docs
-- GitHub releases and changelogs
-- research
-- major OSS
-- meaningful industry changes
+## Workers
 
-It is precision-oriented and prefers primary evidence.
+**Frontier Radar** asks what changed in AI itself: models, official releases, research, major OSS, inference, agent infrastructure, pricing/access and meaningful industry structure.
 
-### Practitioner Radar
-Asks: **What are people discovering by actually using AI?**
+**Practitioner Radar** asks what people are learning by actually using AI: workflows, hacks, experiments, failure modes, small OSS tools, X/Reddit/HN/GitHub discussions and practitioner blogs.
 
-Focus:
-- X
-- Reddit / Hacker News
-- GitHub issues/discussions and small projects
-- technical blogs
-- real workflows, experiments, failure modes, and useful tricks
+**Daily Curator / Verifier** merges candidates into claim/event units, verifies them, re-scores them, applies the reliability gate, writes canonical intel, updates the daily briefing, durable topics and dynamic watches.
 
-It is recall-oriented and may keep promising unverified signals for later review.
+**Weekly Analyst** synthesizes what materially changed across the week rather than counting mentions.
 
-Approximate search emphasis:
-- 50% broad practitioner/community discovery
-- 30% watchlist
-- 20% wildcard discovery
+## Candidate vs Intel
 
-## Daily Curator
+- `schemas/candidate.schema.json`: hourly discovery lead; may be incomplete or unresolved.
+- `schemas/intel.schema.json`: canonical claim/event that survived curation and may aggregate multiple evidence sources.
+- `schemas/item.schema.json`: legacy compatibility only; do not use for new writes.
 
-Hourly workers do **discovery**, not final acceptance.
+## Scoring
 
-Daily Curator:
-1. merges duplicates without deleting meaningful follow-up evidence
-2. verifies important claims against primary sources
-3. re-scores candidates
-4. evaluates personal value
-5. writes final accepted records
-6. updates daily summaries and durable topic knowledge
+Scores are 0–10: importance, novelty, reliability, actionability, personal_value.
 
-This keeps the hourly pipeline fast while making the long-term knowledge base clean.
+Default personal-priority weights live in `config/interests.yaml`.
 
-## Evaluation
+Reliability gate:
+- 0–3: never accepted
+- 4–6: only with explicit caveats and sufficient supporting evidence
+- 7–10: normal curation rules
 
-Candidates are scored 0–10 on:
+## Jev
 
-- **importance** — impact on AI capabilities, tooling, research, or industry
-- **novelty** — genuinely new information versus repository knowledge
-- **reliability** — evidence quality and provenance
-- **actionability** — usefulness for understanding or using AI
-- **personal_value** — likely usefulness for the owner of this knowledge base
+Jev is optional. Use it only for bounded pre-decisions such as relevance, likely duplicate, route, personal-value bucket and verification priority. It is not a verifier, researcher, prose generator or final acceptance authority.
 
-A broad industry announcement can be important but low personal value. A small workflow trick can be modestly important but very high personal value.
-
-## Optional Jev decision layer
-
-Jev is optional and must never be a hard dependency.
-
-When available, use it as a fast pre-decision layer for bounded judgments such as:
-- relevance
-- duplicate likelihood
-- topic routing
-- personal-value bucket
-- verification priority
-
-The generative LLM still performs research, verification, synthesis, and prose generation. See `docs/jev-integration.md`.
-
-## Repository structure
+## Repository
 
 ```text
-ai-intel/
-├── README.md
-├── prompts/
-│   ├── hourly-intel.md          # Frontier Radar
-│   ├── practitioner-radar.md
-│   ├── daily-curator.md
-│   └── weekly-analyst.md
-├── schemas/
-│   └── item.schema.json
-├── state/
-│   ├── frontier.json
-│   └── practitioner.json
-├── queue/
-│   ├── frontier/
-│   └── practitioner/
-├── data/
-│   ├── raw/                     # legacy/bootstrap records
-│   └── accepted/
-├── daily/
-├── weekly/
-├── topics/
-└── docs/
-    └── jev-integration.md
+config/       priorities, sources, persistent watchlist
+prompts/      worker instructions
+schemas/      candidate + canonical intel schemas
+state/        checkpoints + dynamic watches
+queue/        hourly candidates
+data/accepted canonical intel
+daily/        daily briefing
+weekly/       weekly synthesis
+topics/       durable conceptual knowledge
+archive/      legacy/bootstrap working records
 ```
 
-## Operating cadence
+## Cadence
 
-- **Frontier Radar:** every hour
-- **Practitioner Radar:** every hour
-- **Daily Curator / Verifier:** once per day
-- **Weekly Analyst:** once per week
+- Frontier Radar: hourly
+- Practitioner Radar: hourly
+- Daily Curator: daily
+- Weekly Analyst: weekly
 
-The repository is the durable memory layer. Individual models and workers should remain replaceable.
+Do not add more hourly workers by default. Split by discovery objective, not by source; add another worker only after measured misses justify it.

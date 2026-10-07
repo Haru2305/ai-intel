@@ -1,0 +1,215 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Haru2305/ai-intel/schemas/candidate.schema.json",
+  "title": "AI Intel Candidate",
+  "type": "object",
+  "required": [
+    "id",
+    "collected_at",
+    "lane",
+    "source",
+    "url",
+    "title",
+    "summary",
+    "category",
+    "importance",
+    "novelty",
+    "reliability",
+    "actionability",
+    "personal_value",
+    "confidence",
+    "status"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "collected_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "published_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "lane": {
+      "enum": [
+        "frontier",
+        "practitioner"
+      ]
+    },
+    "source": {
+      "type": "string"
+    },
+    "author": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "primary_source_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uri"
+    },
+    "title": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "original_claim": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "what_changed": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "why_it_matters": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "category": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "models",
+          "agents",
+          "coding",
+          "prompting",
+          "local-llm",
+          "research",
+          "tools",
+          "ai-industry"
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "importance": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "novelty": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "reliability": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "actionability": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "personal_value": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "confidence": {
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "status": {
+      "enum": [
+        "queued",
+        "needs_verification"
+      ]
+    },
+    "verification_status": {
+      "enum": [
+        "unverified",
+        "partially_verified",
+        "verified",
+        "misleading",
+        "false"
+      ]
+    },
+    "duplicate_of": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "jev": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "used": {
+          "type": "boolean"
+        },
+        "model": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "relevance": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "personal_value": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "verification_priority": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "confidence": {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

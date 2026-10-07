@@ -1,0 +1,31 @@
+source_types:
+  primary:
+    - official documentation
+    - official changelog or announcement
+    - maintainer repository release
+    - paper or research-lab publication
+  strong_secondary:
+    - high-quality technical reporting
+    - maintainer technical blog
+  practitioner:
+    - X
+    - Reddit
+    - Hacker News
+    - GitHub issue or discussion
+    - small open-source project
+    - personal technical blog
+
+frontier:
+  preference: [primary, strong_secondary, practitioner]
+  rule: Resolve social leads to stronger evidence whenever possible.
+
+practitioner:
+  preference: [practitioner, primary, strong_secondary]
+  rule: Preserve useful weak signals without upgrading anecdotes into facts.
+
+anti_signals:
+  - virality without evidence
+  - affiliate-heavy promotion
+  - generic prompt lists
+  - reposts without added information
+  - patch bumps without meaningful behavioral change

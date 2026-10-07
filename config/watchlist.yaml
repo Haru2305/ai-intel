@@ -1,0 +1,18 @@
+# Persistent deliberate checks. Event-specific watches belong in state/watch.json.
+providers: [OpenAI, Anthropic, Google DeepMind, Meta AI, Mistral AI, xAI]
+projects:
+  - Claude Code
+  - Codex
+  - Gemini CLI
+  - Claude Agent SDK
+  - MCP
+  - Hugging Face Transformers
+  - Hugging Face Diffusers
+themes:
+  - coding agents
+  - long-running agents
+  - context engineering
+  - agent verification
+  - cross-model orchestration
+  - local inference
+  - open-weight models
