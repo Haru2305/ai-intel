@@ -151,7 +151,7 @@ def run(root, repos=DEFAULT_REPOS, fetcher=fetch_releases, now=None):
     for repo in repos:
         last = previous["repos"].get(repo)
         cutoff = max(cutoff_default, parse_time(last) - dt.timedelta(days=1)) if last else cutoff_default
-        releases = fetcher(repo)
+        releases = fetcher(repo, token=os.getenv("GITHUB_TOKEN")) if fetcher is fetch_releases else fetcher(repo)
         newest = parse_time(last) if last else cutoff_default
         for release in releases:
             if release.get("draft") or release.get("prerelease"):
@@ -179,7 +179,11 @@ def run(root, repos=DEFAULT_REPOS, fetcher=fetch_releases, now=None):
                 if line.strip():
                     existing.append(json.loads(line))
     ids = {item["id"] for item in existing}
-    unique = [item for item in additions if item["id"] not in ids and not ids.add(item["id"])]
+    unique = []
+    for item in additions:
+        if item["id"] not in ids:
+            ids.add(item["id"])
+            unique.append(item)
     if unique:
         queue_path.parent.mkdir(parents=True, exist_ok=True)
         fd, temp = tempfile.mkstemp(prefix=".queue-", dir=queue_path.parent)
