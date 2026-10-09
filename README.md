@@ -81,6 +81,12 @@ topics/       durable conceptual knowledge
 archive/      legacy/bootstrap working records
 ```
 
+## Engineering & operational quality
+
+See [Engineering standards](docs/engineering-standards.md) for the run contract, failure handling, observability, evaluation fixtures, cost/latency tracking, release checklist, and incident loop.
+
+This is a **design and delivery policy**, not a claim that the runtime, metrics, or automated Evals are already deployed. Measure quality before adding extra hourly workers, RAG, vector search, or agent memory.
+
 ## Cadence
 
 - Frontier Radar: hourly
