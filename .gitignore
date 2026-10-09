@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.env
+.env.*
+!.env.example
+# Runtime-generated state is not automatically committed.
+state/frontier-github.json
+queue/frontier/*.jsonl
